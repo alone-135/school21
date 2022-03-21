@@ -1,3 +1,1 @@
-# school21
-
-alone
+# school_21
