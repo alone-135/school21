@@ -1,4 +1,5 @@
-#ifndef CAT_LIB_H_
+#ifndef SRC_CAT_S21_CAT_LIB_H_
+#define SRC_CAT_S21_CAT_LIB_H_
 
 struct flags {
     int b_flag;
@@ -8,4 +9,4 @@ struct flags {
     int t_flag;
 };
 
-#endif  //  CAT_LIB_H
+#endif  //  SRC_CAT_S21_CAT_LIB_H_
