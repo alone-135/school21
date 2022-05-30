@@ -7,14 +7,6 @@ void err(int num);
 void just_open(char** argv);
 void flags_switcher(char sym);
 
-struct some {
-    int b_flag;
-    int e_flag;
-    int n_flag;
-    int s_flag;
-    int t_flag;
-} flags_state;
-
 int main(int argc, char** argv) {
     int arg_check_log[argc + 1];
     arg_check(argc, argv, arg_check_log);
