@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "voc1.h": "c",
-        "sstream": "c",
-        "stdio.h": "c"
-    }
-}
