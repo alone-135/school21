@@ -80,6 +80,7 @@ int opredelenie_flags(int argc, char** argv, TFlags* flags) {
     }
     return error;
 }
+
 void readFile(char* whatIsfile, TFlags flags) {
     FILE* fp;
     fp = fopen(whatIsfile, "rt");
