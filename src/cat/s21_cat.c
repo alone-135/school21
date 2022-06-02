@@ -1,32 +1,37 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "s21_cat_lib.h"
 
 int flag_switcher(int argc, char** argv, struct flag_list* flags);
-void readFile(char* file_name, struct flag_list flags);
+int file_checker_func(int argc, char** argv);
+void open_files(char* file_name, struct flag_list flags);
 
 int main(int argc, char** argv) {
-    // инициализациия и обнуление структуры
     struct flag_list flags = {0};
-    // вызов функции проверки и переключения флагов, возврат ошибки функции
+
     int flag_checker = flag_switcher(argc, argv, &flags);
-    // проверка на наличие ошибок в функции проверки флагов
+    int file_checker = file_checker_func(argc, argv);
+
     if (flag_checker == 0) {
-        for (int i = 0; i < argc; i++) {
-            if (argv[i][0] != '-') {
-                readFile(argv[i], flags);
+        if (file_checker != 0) {
+            for (int i = 1; i < argc; i++) {
+                if (argv[i][0] != '-') {
+                    open_files(argv[i], flags);
+                }
             }
+        } else {
+            printf("ERROR! : NO FILE!\n");
         }
     }
-
     return 0;
 }
 
 int flag_switcher(int argc, char** argv, struct flag_list* flags) {
     int err = 0;
     if (argc < 2) {
-        printf("ERROR! : NO FLAGS AND FILES!");
+        printf("ERROR! : NO FLAGS AND FILES!\n");
         err = 1;
     } else {
         for (int i = 1; i < argc && err == 0; i++) {
@@ -83,86 +88,51 @@ int flag_switcher(int argc, char** argv, struct flag_list* flags) {
     return err;
 }
 
-void readFile(char* file_name, struct flag_list flags) {
-    FILE* file;
-    file = fopen(file_name, "r");
-
-    if (file == NULL) {
-        printf("cat: %s: No such file or directory", file_name);
-    } else {
-        int stroka_1 = 0, delete_str = 0;
-        int counter = 1;
-        char simvol = fgetc(file);
-        stroka_1 = (simvol == '\n') ? 1 : 0;
-        int not_printing = 0;
-        int enter = 0;
-        enter = (stroka_1 == 1) ? 1 : 0;
-        while (!feof(file)) {
-            char temp;
-            temp = simvol;
-            if (flags.b_flag == 1 && (stroka_1 || counter == 1) &&
-                simvol != '\n') {
-                printf("%6d\t", counter);
-                counter++;
-            }
-            if (flags.n_flag == 1 && flags.b_flag != 1 &&
-                (stroka_1 || counter == 1)) {
-                if (delete_str != -1) {
-                    printf("%6d\t", counter);
-                    counter++;
-                }
-            }
-            if (flags.e_flag == 1 && simvol == '\n') {
-                if (delete_str != -1) printf("$");
-            }
-            if (flags.t_flag == 1 && simvol == '\t') {
-                printf("^");
-                simvol = 'I';
-            }
-            if (flags.v_flag == 1) {
-                int ch = (int)simvol;
-                if (simvol < 0) {
-                    simvol &= 127;
-                    ch = (int)simvol;
-                    ch += 128;
-                }
-                if (ch != 9 && ch != 10 && ch < 32) {
-                    printf("^");
-                    simvol += 64;
-                } else if (ch == 127) {
-                    printf("^");
-                    simvol = '?';
-                } else if (ch > 127 && ch < 160) {
-                    printf("M-^");
-                    simvol = ch - 64;
-                    if (simvol == 'J' && (flags.b_flag || flags.n_flag)) {
-                        printf("%c", simvol);
-                        printf("%6d\t", counter);
-                        counter += 1;
-                        not_printing = 1;
-                    }
-                } else if (ch >= 160 && ch <= 255) {
-                    simvol -= 128;
-                }
-            }
-
-            if (delete_str != -1 && not_printing != 1) {
-                printf("%c", simvol);
-            }
-            stroka_1 = (simvol == '\n') ? 1 : 0;
-            simvol = fgetc(file);
-            if (enter == 1 && simvol == '\n' && flags.s_flag == 1) {
-                delete_str = -1;
-            } else {
-                delete_str = 0;
-            }
-            if (temp == '\n' && simvol == '\n') {
-                enter = 1;
-            } else {
-                enter = 0;
-            }
-            not_printing = 0;
+int file_checker_func(int argc, char** argv) {
+    int count = 0;
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] != '-') {
+            count++;
         }
+    }
+    return count;
+}
+
+void open_files(char* file_name, struct flag_list flags) {
+    FILE* file = fopen(file_name, "r");
+    if (file == NULL) {
+        printf("ERROR! : NO SUCH FILE!\n");
+        fclose(file);
+    } else {
+        fseek(file, 0, SEEK_END);
+        int file_size = ftell(file);
+        rewind(file);
+        int num_str = 0;
+
+        char* str = malloc(file_size * sizeof(char) + 1);
+        if (str != NULL) {
+            fread(str, sizeof(char), file_size, file);
+        }
+        if (str[0] != '\0') {
+            num_str++;
+        }
+        for (int i = 0; i < file_size; i++) {
+            if ((flags.n_flag && num_str != 0 &&
+                 (str[i - 1] == '\n' || i == 0))) {
+                printf("%6d\t", num_str);
+            }
+            if (str[i] == '\n') {
+                num_str++;
+            }
+            if (flags.e_flag && str[i] == '\n') {
+                printf("$\n");
+            } else if (flags.t_flag && str[i] == '\t') {
+                printf("^I");
+            } else {
+                printf("%c", str[i]);
+            }
+        }
+        free(str);
         fclose(file);
     }
 }
