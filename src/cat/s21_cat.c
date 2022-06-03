@@ -164,10 +164,19 @@ char* e_func(char* str) {
 char* s_func(char* str) {
     int length = strlen(str);
     char* temp = calloc(length + 1, sizeof(char));
-    // int new_line_count = 0;
+    int new_line_count = 0;
+    int j = 0;
 
     for (int i = 0; i < length; i++) {
-        temp[i] = str[i];
+        if (str[i] == '\n' && (str[i - 1] == '\n' || i == 0)) {
+            new_line_count++;
+        } else {
+            new_line_count = 0;
+        }
+        if (new_line_count < 2) {
+            temp[j] = str[i];
+            j++;
+        }
     }
 
     free(str);
