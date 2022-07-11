@@ -1,5 +1,3 @@
 #include <stdio.h>
 
-#include "main_lib.h"
-
-int main() { return 0; }
+int main(int argc, char** argv) { return 0; }
