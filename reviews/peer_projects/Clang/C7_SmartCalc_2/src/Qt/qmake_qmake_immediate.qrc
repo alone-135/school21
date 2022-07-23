@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+<file alias="icon.icns">/Users/laceyhan/alone/github/reviews/peer_projects/SM/C7_SmartCalc_v1.0-1/src/Qt/icon.icns</file>
+</qresource>
+</RCC>
