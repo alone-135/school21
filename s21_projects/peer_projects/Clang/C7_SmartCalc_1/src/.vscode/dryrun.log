@@ -1,7 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory `/Users/parkinso/Desktop/C7_SmartCalc_v1.0-1/src'
-test -d QT_Calc.app/Contents/MacOS/ || mkdir -p QT_Calc.app/Contents/MacOS/
- 
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -stdlib=libc++ -headerpad_max_install_names  -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11 -Wl,-rpath,@executable_path/../Frameworks -Wl,-rpath,/usr/local/lib -o QT_Calc.app/Contents/MacOS/QT_Calc credit_window.o deposit_window.o main.o mainwindow.o qcustomplot.o s21_calc.o moc_credit_window.o moc_deposit_window.o moc_mainwindow.o moc_qcustomplot.o   -F/usr/local/lib -framework QtPrintSupport -framework ApplicationServices -framework QtWidgets -framework QtGui -framework AppKit -framework ImageIO -framework Metal -framework QtCore -framework DiskArbitration -framework IOKit -lcups -framework AGL -framework OpenGL   
-make: Leaving directory `/Users/parkinso/Desktop/C7_SmartCalc_v1.0-1/src'
- 
